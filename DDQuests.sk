@@ -1,0 +1,174 @@
+# ====================
+# ==  QUEST OBJECT  ==
+# ====================
+# Listado de Quests: {DD.Quests.Quests::*}
+# Nombre: {DD.Quests.Quests::%QuestName%} - string
+# Descripción: {DD.Quests.Quests::%QuestName%.Description} - string
+#
+# Dinero: {DD.Quests.Quests::%QuestName%.Money} - true or false = false
+# 	If true, player must have a quantity of money or will have to pay some money to pass the quest.
+# 	{DD.Quests.Quests::%QuestName%.Money.Needed} - Number = 0
+#		Money Needed to pass the quest. Its not the cost of the quest.
+#	{DD.Quests.Quests::%QuestName%.Money.Cost} - Number = 0
+#		Real cost of the quest. Money that the player will have to pay
+#
+# XP: {DD.Quests.Quests::%QuestName%.XP} - true or false = false
+#	{DD.Quests.Quests::%QuestName%.XP.Needed} - Number = 0
+#	{DD.Quests.Quests::%QuestName%.XP.Cost} - Number = 0
+#
+# Item: {DD.Quests.Quests::%QuestName%.Item} - True or false = false
+#	{DD.Quests.Quests::%QuestName%.Item.Needed} - Number = 0
+# 	{DD.Quests.Quests::%QuestName%.Item.Cost} - Number
+
+
+# Quest.tipo: zona, bloque, item, xp, money,
+# Quest.Money:
+#	Quest.Money.Needed - number - Cantidad necesaria para completar la quest
+#	Quest.Money.Cost - True or false - Si es true, le quita el dinero al jugador 
+# Quest.XP:
+# 	Quest.XP.Needed
+#	Quest.XP.Cost
+# Quest.Item:
+#	Quest.Item.Needed
+#	Quest.Item.Cost
+#
+# ================
+# ==  COMMANDS  ==
+# ================
+# /Quests/Quest/DDQuests/DDQuest/DDMisiones/DDmision/Misiones/Mision
+# /Quests help/?/ayuda
+# /Quests add/+/new/nueva/anadir <name>
+
+# /Quests edit/editar <QuestName> <property> <value>
+#	Permission: DD.Quests.CMD.Quests.Edit
+#	Description: Edits properties of a quest.
+
+# /Quests delete/remove/-/borrar/eliminar
+# /Quests list/listado/lista
+#
+# /Quests info <QuestName>
+#	Permission: DD.Quests.CMD.Quests.Info
+#	Description: Shows info about a quest
+
+# ===================
+# ==  PERMISSIONS  ==
+# ===================
+# COMMAND PERMISSIONS:
+# 	DD.Quests.CMD.Quests
+#	DD.Quests.CMD.Quests.Base
+#	DD.Quests.CMD.Quests.Help
+#	DD.Quests.CMD.Quests.Add
+#	DD.Quests.CMD.Quests.Edit
+#	DD.Quests.CMD.Quests.Delete
+#	DD.Quests.CMD.Quests.List
+#	DD.Quests.CMD.Quests.Info
+
+# ==========================
+# ==  MAIN QUEST COMMAND  ==
+# ==========================
+command /Quests [<text>] [<text>] [<text>]:
+	description: Comando general de quest
+	usage: /Quest [ayuda/add/delete/edit/list]
+	permission: DD.Quests.CMD.Quests
+	permission message: Lo siento pero no tienes suficientes permisos para ejecutar el comando
+	aliases: Misiones, DDQuests, DDMisiones, Mision, Quest, DDQuest
+	executable by: players and console
+	trigger:
+
+# ================
+# ==  BASE COMMAND  ==
+# ================ 
+		if arg 1 is not set:
+			if player has permission "DD.Quests.CMD.Quests.Base":
+				message "DDQuest"
+				message "by rom3ox, for DDCraft"
+
+# ============
+# ==  HELP  ==
+# ============
+		if arg 1 is "help" or "ayuda" or "?":
+			if player has permission "DD.Quests.CMD.Quests.Help":
+				message "DDQuest - Ayuda"
+
+# =================
+# ==  ADD QUEST  ==
+# =================
+		if arg 1 is "add" or "+" or "new" or "nueva" or "anadir":
+			if player has permission "DD.Quests.CMD.Quests.Add":
+				message "DDQuest - Anadir Quest"
+				if arg 2 is not set:
+					message "Debes especificar un nombre para la quest"
+				else:
+					# Set default values for new quest:
+					set {DD.Quests.Quests::%arg 2%::Name} to arg 2
+					set {DD.Quests.Quests::%arg 2%::Description} to "Without Description"
+					set {DD.Quests.Quests::%arg 2%::Money} to false
+					set {DD.Quests.Quests::%arg 2%::Money.Needed} to 0
+					set {DD.Quests.Quests::%arg 2%::Money.Cost} to 0
+					set {DD.Quests.Quests::%arg 2%::XP} to false
+					set {DD.Quests.Quests::%arg 2%::XP.Needed} to 0
+					set {DD.Quests.Quests::%arg 2%::XP.Cost} to 0
+					set {DD.Quests.Quests::%arg 2%::Item} to false
+					set {DD.Quests.Quests::%arg 2%::Item.Needed} to 0
+					set {DD.Quests.Quests::%arg 2%::Item.Cost} to 0
+					if {DD.Quests.Quests::%arg 2%::Name} is not set:
+						message "Hubo un error al crear la quest o esta no existe"
+					else:
+						message "Has creado una quest con el nombre %arg 2%"
+
+# ==================
+# ==  EDIT QUEST  ==
+# ==================
+		if arg 1 is "edit" or "editar":
+			if player has permission "DD.Quests.CMD.Quests.Edit":
+				message "DDQuest - Editar Quest"
+
+# ====================
+# ==  DELETE QUEST  ==
+# ====================
+		if arg 1 is "remove" or "delete" or "borrar" or "eliminar" or "-":
+			if player has permission "DD.Quests.CMD.Quests.Delete":
+				message "DDQuest - Elimitar Quest"
+
+# ===================
+# ==  LIST QUESTS  ==
+# ===================
+		if arg 1 is "list" or "listado" or "lista":
+			if player has permission "DD.Quest.CMD.Quests.List":
+				message "DDQuest - Listado de Quests"
+				loop {DD.Quests.Quests::*}:
+					message "%loop-index% >> %loop-value%"
+
+# ==================
+# ==  QUEST INFO  ==
+# ==================
+		if arg 1 is "info":
+			if player has permission "DD.Quest.CMD.Quests.Info":
+				message "Quieres ver la información de una quest"
+				if arg 2 is not set:
+					message "Debes introducir el nombre de la quest que quieres ver /quest info <nombre>"
+				else:
+					if {DD.Quests.Quests::%arg 2%::Name} is not set:
+						message "No existe ninguna Quest con ese nombre"
+						message "Debug: {DD.Quests.Quests::%arg 2%::%arg 2%}"
+					else:
+						message "Información de la Quest: %{DD.Quests.Quests::%arg 2%}%"
+						message "Nombre: %{DD.Quests.Quests::%arg 2%::Name}%"
+						message "Descripción: %{DD.Quests.Quests::%arg 2%::Description}%"
+						message "Condiciones:"
+						message "- Dinero: %{DD.Quests.Quests::%arg 2%::Money}%"
+						message "   Necesario: %{DD.Quests.Quests::%arg 2%::Money.Needed}%"
+						message "   Coste: %{DD.Quests.Quests::%arg 2%::Money.Cost}%"
+						message "- Experiencia: %{DD.Quests.Quests::%arg 2%::XP}%"
+						message "   Necesaria: %{DD.Quests.Quests::%arg 2%::XP.Needed}%"
+						message "   Coste: %{DD.Quests.Quests::%arg 2%.XP::Cost}%"
+						message "- Item: %{DD.Quests.Quests::%arg 2%::Item}%"
+						message "   Necesario: %{DD.Quests.Quests::%arg 2%::Item.Needed}%"
+						message "   Coste: %{DD.Quests.Quests::%arg 2%::Item.Cost}%"
+
+# ===================
+# ==  QUEST CHECK  ==
+# ===================
+		if arg 1 is "check":
+			if player has permission "DD.Quests.CMD.Quests.Check":
+				message "[DDQuest] - Comprueba el estado de una Quest"
